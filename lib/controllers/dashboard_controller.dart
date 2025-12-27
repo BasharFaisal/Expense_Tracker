@@ -1,8 +1,53 @@
 import 'package:get/get.dart';
 import '../services/database_service.dart';
+import '../services/storage_service.dart';
+import '../controllers/expense_controller.dart';
+import '../models/expense_model.dart';
 
 class DashboardController extends GetxController {
   final DatabaseService _databaseService = DatabaseService.instance;
+  final ExpenseController _expenseController = Get.put(ExpenseController());
+
+  final RxList<Expense> expenses = <Expense>[].obs;
+  final RxDouble dailyTotal = 0.0.obs;
+  final RxDouble monthlyTotal = 0.0.obs;
+  final RxMap<int, double> totalsByCategory = <int, double>{}.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    loadData();
+  }
+
+  Future<void> loadData() async {
+    final userId = StorageService.instance.userId;
+    if (userId == null) return;
+
+    // Load expenses
+    expenses.value = await _expenseController.getUserExpenses(userId);
+
+    // Load totals
+    await _loadTotals(userId);
+  }
+
+  Future<void> _loadTotals(int userId) async {
+    final now = DateTime.now();
+
+    // Daily total
+    dailyTotal.value = await getDailyTotal(userId, now);
+
+    // Monthly total
+    monthlyTotal.value = await getMonthlyTotal(userId, now.year, now.month);
+
+    // Total by category
+    totalsByCategory.value =
+        await _expenseController.getTotalByCategory(userId);
+  }
+
+  @override
+  Future<void> refresh() async {
+    await loadData();
+  }
 
   Future<double> getDailyTotal(int userId, DateTime date) async {
     final db = await _databaseService.database;
