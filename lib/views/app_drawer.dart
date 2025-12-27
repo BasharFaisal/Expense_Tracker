@@ -36,9 +36,12 @@ class AppDrawer extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.add),
               title: Text('add_expense'.tr),
-              onTap: () {
+              onTap: () async {
                 Navigator.of(context).pop();
-                Get.toNamed(AppRoutes.addExpense);
+                final result = await Get.toNamed(AppRoutes.addExpense);
+                if (result == true) {
+                  Get.snackbar('success'.tr, 'expense_saved'.tr);
+                }
               },
             ),
             ListTile(

@@ -33,21 +33,13 @@ class LoginViewState extends State<LoginView> {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () async {
-                final email = _emailController.text.trim();
-                final password = _passwordController.text;
-
-                if (email.isEmpty || password.isEmpty) {
-                  Get.snackbar('error'.tr, 'please_enter_email_password'.tr);
-                  return;
-                }
-
                 final auth = Get.put(AuthController());
-                final user = await auth.loginUser(email, password);
+                final user = await auth.loginWithValidation(
+                  _emailController.text,
+                  _passwordController.text,
+                );
                 if (user != null) {
-                  Get.snackbar('success'.tr, 'logged_in'.tr);
                   Get.offAllNamed(AppRoutes.dashboard);
-                } else {
-                  Get.snackbar('error'.tr, 'invalid_credentials'.tr);
                 }
               },
               child: Text('login'.tr),

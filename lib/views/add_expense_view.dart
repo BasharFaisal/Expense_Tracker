@@ -235,24 +235,13 @@ class AddExpenseViewState extends State<AddExpenseView> {
     );
 
     if (result != null && result.isNotEmpty) {
-      try {
-        final category = Category(
-          name: result,
-          userId: userId,
-        );
-        await _categoryController.addCategory(category);
-        // Reload categories to get the new ID
-        final categories = await _categoryController.getUserCategories(userId);
-        final addedCategory =
-            categories.firstWhere((cat) => cat.name == result);
+      final addedCategory =
+          await _categoryController.addCategoryFromName(result, userId);
+      if (addedCategory != null) {
         setState(() {
-          _categoryKey++; // Refresh the dropdown
-          _selectedCategoryId =
-              addedCategory.id; // Select the newly added category
+          _categoryKey++;
+          _selectedCategoryId = addedCategory.id;
         });
-        Get.snackbar('success'.tr, 'category_added'.tr);
-      } catch (e) {
-        Get.snackbar('error'.tr, '${'save_failed'.tr}: $e');
       }
     }
   }
@@ -285,79 +274,28 @@ class AddExpenseViewState extends State<AddExpenseView> {
     );
 
     if (result != null && result.isNotEmpty) {
-      try {
-        final paymentMethod = PaymentMethod(
-          name: result,
-          userId: userId,
-        );
-        await _paymentMethodController.addPaymentMethod(paymentMethod);
-        // Reload payment methods to get the new ID
-        final methods =
-            await _paymentMethodController.getUserPaymentMethods(userId);
-        final addedMethod =
-            methods.firstWhere((method) => method.name == result);
+      final addedMethod = await _paymentMethodController
+          .addPaymentMethodFromName(result, userId);
+      if (addedMethod != null) {
         setState(() {
-          _paymentMethodKey++; // Refresh the dropdown
-          _selectedPaymentMethodId =
-              addedMethod.id; // Select the newly added method
+          _paymentMethodKey++;
+          _selectedPaymentMethodId = addedMethod.id;
         });
-        Get.snackbar('success'.tr, 'payment_method_added'.tr);
-      } catch (e) {
-        Get.snackbar('error'.tr, '${'save_failed'.tr}: $e');
       }
     }
   }
 
   Future<void> _saveExpense() async {
-    if (_amountController.text.isEmpty) {
-      Get.snackbar('error'.tr, 'please_enter_valid_amount'.tr);
-      return;
-    }
-
-    final amount = double.tryParse(_amountController.text);
-    if (amount == null || amount <= 0) {
-      Get.snackbar('error'.tr, 'please_enter_valid_amount'.tr);
-      return;
-    }
-
-    if (_selectedCategoryId == null || _selectedPaymentMethodId == null) {
-      Get.snackbar('error'.tr, 'please_fill_all_fields'.tr);
-      return;
-    }
-
-    final userId = StorageService.instance.userId ?? 0;
-
-    try {
-      if (_isEditing && _editingExpense != null) {
-        // Update existing expense
-        final expense = Expense(
-          id: _editingExpense!.id,
-          amount: amount,
-          note: _noteController.text.isEmpty ? null : _noteController.text,
-          date: _selectedDate,
-          userId: userId,
-          categoryId: _selectedCategoryId!,
-          paymentMethodId: _selectedPaymentMethodId!,
-        );
-        await _expenseController.updateExpense(expense);
-        Get.back(result: true);
-        Get.snackbar('success'.tr, 'expense_updated'.tr);
-      } else {
-        // Add new expense
-        final expense = Expense(
-          amount: amount,
-          note: _noteController.text.isEmpty ? null : _noteController.text,
-          date: _selectedDate,
-          userId: userId,
-          categoryId: _selectedCategoryId!,
-          paymentMethodId: _selectedPaymentMethodId!,
-        );
-        await _expenseController.addExpense(expense);
-        Get.back(result: true);
-        Get.snackbar('success'.tr, 'expense_saved'.tr);
-      }
-    } catch (e) {
-      Get.snackbar('error'.tr, '${'save_failed'.tr}: $e');
+    final success = await _expenseController.saveExpenseFromForm(
+      amount: _amountController.text,
+      note: _noteController.text,
+      date: _selectedDate,
+      categoryId: _selectedCategoryId,
+      paymentMethodId: _selectedPaymentMethodId,
+      expenseId: _isEditing ? _editingExpense?.id : null,
+    );
+    if (success) {
+      Get.back(result: true);
     }
   }
 }

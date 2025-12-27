@@ -113,18 +113,12 @@ class _CategoriesViewState extends State<CategoriesView> {
     );
 
     if (result != null && result.isNotEmpty) {
-      try {
-        final category = Category(
-          name: result,
-          userId: userId,
-        );
-        await _categoryController.addCategory(category);
-        Get.snackbar('success'.tr, 'category_added'.tr);
+      final added =
+          await _categoryController.addCategoryFromName(result, userId);
+      if (added != null) {
         setState(() {
           _refreshKey++;
         });
-      } catch (e) {
-        Get.snackbar('error'.tr, '${'save_failed'.tr}: $e');
       }
     }
   }
@@ -156,52 +150,25 @@ class _CategoriesViewState extends State<CategoriesView> {
       ),
     );
 
-    if (result != null && result.isNotEmpty && result != category.name) {
-      try {
-        final updatedCategory = Category(
-          id: category.id,
-          name: result,
-          userId: userId,
-          icon: category.icon,
-        );
-        await _categoryController.updateCategory(updatedCategory);
-        Get.snackbar('success'.tr, 'category_updated'.tr);
+    if (result != null && result.isNotEmpty) {
+      final updated = await _categoryController.updateCategoryFromName(
+          category, result, userId);
+      if (updated) {
         setState(() {
           _refreshKey++;
         });
-      } catch (e) {
-        Get.snackbar('error'.tr, '${'save_failed'.tr}: $e');
       }
     }
   }
 
   Future<void> _showDeleteDialog(Category category, int userId) async {
-    final confirmed = await Get.dialog<bool>(
-      AlertDialog(
-        title: Text('delete'.tr),
-        content: Text('are_you_sure'.tr),
-        actions: [
-          TextButton(
-            onPressed: () => Get.back(result: false),
-            child: Text('cancel'.tr),
-          ),
-          TextButton(
-            onPressed: () => Get.back(result: true),
-            child: Text('delete'.tr),
-          ),
-        ],
-      ),
-    );
-
-    if (confirmed == true && category.id != null) {
-      try {
-        await _categoryController.deleteCategory(category.id!);
-        Get.snackbar('success'.tr, 'category_deleted'.tr);
+    if (category.id != null) {
+      final deleted = await _categoryController
+          .deleteCategoryWithConfirmation(category.id!);
+      if (deleted) {
         setState(() {
           _refreshKey++;
         });
-      } catch (e) {
-        Get.snackbar('error'.tr, '${'save_failed'.tr}: $e');
       }
     }
   }

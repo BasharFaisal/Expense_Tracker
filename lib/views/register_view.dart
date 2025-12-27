@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../controllers/auth_controller.dart';
-import '../models/user_model.dart';
 import '../routes/app_routes.dart';
 
 class RegisterView extends StatefulWidget {
@@ -38,27 +37,14 @@ class RegisterViewState extends State<RegisterView> {
             const SizedBox(height: 16),
             ElevatedButton(
                 onPressed: () async {
-                  final name = _nameController.text.trim();
-                  final email = _emailController.text.trim();
-                  final password = _passwordController.text;
-
-                  if (name.isEmpty || email.isEmpty || password.isEmpty) {
-                    Get.snackbar('error'.tr, 'please_fill_all_fields'.tr);
-                    return;
-                  }
-
                   final auth = Get.put(AuthController());
-                  final user = User(
-                      name: name,
-                      email: email,
-                      password: password,
-                      role: 'User');
-                  try {
-                    await auth.registerUser(user);
-                    Get.snackbar('success'.tr, 'account_created'.tr);
+                  final success = await auth.registerWithValidation(
+                    _nameController.text,
+                    _emailController.text,
+                    _passwordController.text,
+                  );
+                  if (success) {
                     Get.offAllNamed(AppRoutes.login);
-                  } catch (e) {
-                    Get.snackbar('error'.tr, e.toString());
                   }
                 },
                 child: Text('register'.tr)),

@@ -22,12 +22,12 @@ class DashboardView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('dashboard'.tr),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: () => dashboardCtrl.refresh(),
-          ),
-        ],
+        // actions: [
+        //   IconButton(
+        //     icon: const Icon(Icons.refresh),
+        //     onPressed: () => dashboardCtrl.refresh(),
+        //   ),
+        // ],
       ),
       drawer: const AppDrawer(),
       body: RefreshIndicator(
@@ -64,6 +64,7 @@ class DashboardView extends StatelessWidget {
           final result = await Get.toNamed(AppRoutes.addExpense);
           if (result == true) {
             dashboardCtrl.refresh();
+            Get.snackbar('success'.tr, 'expense_saved'.tr);
           }
         },
         child: const Icon(Icons.add),
@@ -218,31 +219,16 @@ class DashboardView extends StatelessWidget {
                     );
                     if (result == true) {
                       dashboardCtrl.refresh();
+                      Get.snackbar('success'.tr, 'expense_updated'.tr);
                     }
                   },
                 ),
                 IconButton(
                   icon: const Icon(Icons.delete),
                   onPressed: () async {
-                    final confirmed = await Get.dialog<bool>(
-                      AlertDialog(
-                        title: Text('delete'.tr),
-                        content: const Text('Are you sure?'),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Get.back(result: false),
-                            child: Text('cancel'.tr),
-                          ),
-                          TextButton(
-                            onPressed: () => Get.back(result: true),
-                            child: Text('delete'.tr),
-                          ),
-                        ],
-                      ),
-                    );
-                    if (confirmed == true) {
-                      await expenseCtrl.deleteExpense(expense.id!);
-                      Get.snackbar('success'.tr, 'expense_deleted'.tr);
+                    final deleted = await expenseCtrl
+                        .deleteExpenseWithConfirmation(expense.id!);
+                    if (deleted) {
                       dashboardCtrl.refresh();
                     }
                   },

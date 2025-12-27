@@ -115,18 +115,12 @@ class _PaymentMethodsViewState extends State<PaymentMethodsView> {
     );
 
     if (result != null && result.isNotEmpty) {
-      try {
-        final paymentMethod = PaymentMethod(
-          name: result,
-          userId: userId,
-        );
-        await _paymentMethodController.addPaymentMethod(paymentMethod);
-        Get.snackbar('success'.tr, 'payment_method_added'.tr);
+      final added = await _paymentMethodController.addPaymentMethodFromName(
+          result, userId);
+      if (added != null) {
         setState(() {
           _refreshKey++;
         });
-      } catch (e) {
-        Get.snackbar('error'.tr, '${'save_failed'.tr}: $e');
       }
     }
   }
@@ -180,32 +174,13 @@ class _PaymentMethodsViewState extends State<PaymentMethodsView> {
 
   Future<void> _showDeleteDialog(
       PaymentMethod paymentMethod, int userId) async {
-    final confirmed = await Get.dialog<bool>(
-      AlertDialog(
-        title: Text('delete'.tr),
-        content: Text('are_you_sure'.tr),
-        actions: [
-          TextButton(
-            onPressed: () => Get.back(result: false),
-            child: Text('cancel'.tr),
-          ),
-          TextButton(
-            onPressed: () => Get.back(result: true),
-            child: Text('delete'.tr),
-          ),
-        ],
-      ),
-    );
-
-    if (confirmed == true && paymentMethod.id != null) {
-      try {
-        await _paymentMethodController.deletePaymentMethod(paymentMethod.id!);
-        Get.snackbar('success'.tr, 'payment_method_deleted'.tr);
+    if (paymentMethod.id != null) {
+      final deleted = await _paymentMethodController
+          .deletePaymentMethodWithConfirmation(paymentMethod.id!);
+      if (deleted) {
         setState(() {
           _refreshKey++;
         });
-      } catch (e) {
-        Get.snackbar('error'.tr, '${'save_failed'.tr}: $e');
       }
     }
   }
