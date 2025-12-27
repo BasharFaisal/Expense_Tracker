@@ -9,9 +9,9 @@ class DashboardView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Dashboard')),
+      appBar: AppBar(title: Text('dashboard'.tr)),
       drawer: const AppDrawer(),
-      body: const Center(child: Text('Dashboard content')),
+      body: Center(child: Text('dashboard_content'.tr)),
       floatingActionButton: FloatingActionButton(
         onPressed: () => Get.toNamed('/add-expense'),
         child: const Icon(Icons.add),

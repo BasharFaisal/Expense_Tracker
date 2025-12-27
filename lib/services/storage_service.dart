@@ -24,19 +24,23 @@ class StorageService {
   Future<void> saveSession({
     required int userId,
     required String role,
+    required String username,
   }) async {
     await _prefs.setInt('userId', userId);
     await _prefs.setString('role', role);
+    await _prefs.setString('username', username);
   }
 
   int? get userId => _prefs.getInt('userId');
   String? get role => _prefs.getString('role');
+  String? get username => _prefs.getString('username');
 
   bool get isLoggedIn => userId != null;
 
   Future<void> clearSession() async {
     await _prefs.remove('userId');
     await _prefs.remove('role');
+    await _prefs.remove('username');
   }
 
   // ---------- Language ----------

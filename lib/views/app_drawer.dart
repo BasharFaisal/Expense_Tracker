@@ -16,14 +16,18 @@ class AppDrawer extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             UserAccountsDrawerHeader(
-              accountName: Text(userId != null ? 'User #$userId' : 'Guest'),
+              accountName: Text(
+                userId != null
+                    ? (StorageService.instance.username ?? 'guest'.tr)
+                    : 'guest'.tr,
+              ),
               accountEmail: const Text(''),
               currentAccountPicture:
                   const CircleAvatar(child: Icon(Icons.person)),
             ),
             ListTile(
               leading: const Icon(Icons.dashboard),
-              title: const Text('Dashboard'),
+              title: Text('dashboard'.tr),
               onTap: () {
                 Navigator.of(context).pop();
                 Get.offAllNamed(AppRoutes.dashboard);
@@ -31,7 +35,7 @@ class AppDrawer extends StatelessWidget {
             ),
             ListTile(
               leading: const Icon(Icons.add),
-              title: const Text('Add Expense'),
+              title: Text('add_expense'.tr),
               onTap: () {
                 Navigator.of(context).pop();
                 Get.toNamed(AppRoutes.addExpense);
@@ -39,7 +43,7 @@ class AppDrawer extends StatelessWidget {
             ),
             ListTile(
               leading: const Icon(Icons.category),
-              title: const Text('Categories'),
+              title: Text('categories'.tr),
               onTap: () {
                 Navigator.of(context).pop();
                 Get.toNamed(AppRoutes.categories);
@@ -47,7 +51,7 @@ class AppDrawer extends StatelessWidget {
             ),
             ListTile(
               leading: const Icon(Icons.payment),
-              title: const Text('Payment Methods'),
+              title: Text('payment_methods'.tr),
               onTap: () {
                 Navigator.of(context).pop();
                 Get.toNamed(AppRoutes.paymentMethods);
@@ -56,7 +60,7 @@ class AppDrawer extends StatelessWidget {
             const Spacer(),
             ListTile(
               leading: const Icon(Icons.settings),
-              title: const Text('Settings'),
+              title: Text('settings'.tr),
               onTap: () {
                 Navigator.of(context).pop();
                 Get.toNamed(AppRoutes.settings);
@@ -64,7 +68,7 @@ class AppDrawer extends StatelessWidget {
             ),
             ListTile(
               leading: const Icon(Icons.logout),
-              title: const Text('Logout'),
+              title: Text('logout'.tr),
               onTap: () async {
                 Navigator.of(context).pop();
                 await StorageService.instance.clearSession();

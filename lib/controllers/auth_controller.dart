@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../services/database_service.dart';
+import '../services/storage_service.dart';
 import '../models/user_model.dart';
 
 class AuthController extends GetxController {
@@ -21,9 +21,11 @@ class AuthController extends GetxController {
 
     if (result.isNotEmpty) {
       final user = User.fromMap(result.first);
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setInt('userId', user.id!);
-      await prefs.setString('role', user.role);
+      await StorageService.instance.saveSession(
+        userId: user.id!,
+        role: user.role,
+        username: user.name,
+      );
       return user;
     }
     return null;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'app_drawer.dart';
 
@@ -8,9 +9,9 @@ class PaymentMethodsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Payment Methods')),
+      appBar: AppBar(title: Text('payment_methods'.tr)),
       drawer: const AppDrawer(),
-      body: const Center(child: Text('Payment methods list')),
+      body: Center(child: Text('payment_methods_list'.tr)),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
         child: const Icon(Icons.add),

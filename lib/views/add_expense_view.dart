@@ -26,7 +26,7 @@ class AddExpenseViewState extends State<AddExpenseView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Add Expense')),
+      appBar: AppBar(title: Text('add_expense'.tr)),
       drawer: const AppDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -34,11 +34,11 @@ class AddExpenseViewState extends State<AddExpenseView> {
           children: [
             TextField(
                 controller: _amountController,
-                decoration: const InputDecoration(labelText: 'Amount'),
+                decoration: InputDecoration(labelText: 'amount'.tr),
                 keyboardType: TextInputType.number),
             TextField(
                 controller: _noteController,
-                decoration: const InputDecoration(labelText: 'Note')),
+                decoration: InputDecoration(labelText: 'note'.tr)),
             const SizedBox(height: 8),
             ElevatedButton(
               onPressed: () async {
@@ -52,7 +52,7 @@ class AddExpenseViewState extends State<AddExpenseView> {
                   setState(() => _selectedDate = date);
                 }
               },
-              child: const Text('Pick Date'),
+              child: Text('pick_date'.tr),
             ),
             const SizedBox(height: 16),
             const SizedBox(height: 8),
@@ -62,8 +62,8 @@ class AddExpenseViewState extends State<AddExpenseView> {
                 if (amount == null || amount <= 0) {
                   if (context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                          content: Text('Please enter a valid amount')),
+                      SnackBar(
+                          content: Text('please_enter_valid_amount'.tr)),
                     );
                   }
                   return;
@@ -85,17 +85,17 @@ class AddExpenseViewState extends State<AddExpenseView> {
                   await _expenseController.addExpense(expense);
                   if (context.mounted) {
                     Get.back();
-                    Get.snackbar('Success', 'Expense saved');
+                    Get.snackbar('success'.tr, 'expense_saved'.tr);
                   }
                 } catch (e) {
                   if (context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Save failed: $e')),
+                      SnackBar(content: Text('${'save_failed'.tr}: $e')),
                     );
                   }
                 }
               },
-              child: const Text('Save'),
+              child: Text('save'.tr),
             ),
           ],
         ),

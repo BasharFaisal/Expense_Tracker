@@ -38,18 +38,19 @@ class MyApp extends StatelessWidget {
         storage.isLoggedIn ? AppRoutes.dashboard : AppRoutes.login;
 
     return Obx(() {
+      final currentLocale = Locale(settings.language.value.isNotEmpty
+          ? settings.language.value
+          : AppSittens.defaultLanguage);
       return GetMaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Expense Tracker',
+        title: 'app_title'.tr,
         // تحديد الصفحة الابتدائية بناءً على الجلسة
         initialRoute: initialRoute,
         // صفحات التطبيق مع الـ middleware معرفة في AppPages
         getPages: AppPages.pages,
         // الترجمة
         translations: AppTranslations(),
-        locale: Locale(settings.language.value.isNotEmpty
-            ? settings.language.value
-            : AppSittens.defaultLanguage),
+        locale: currentLocale,
         fallbackLocale: const Locale('en'),
         supportedLocales: const [Locale('en'), Locale('ar')],
         localizationsDelegates: const [

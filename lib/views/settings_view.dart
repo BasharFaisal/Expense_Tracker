@@ -11,28 +11,28 @@ class SettingsView extends StatelessWidget {
     final SettingsController ctrl = Get.find();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(title: Text('settings'.tr)),
       drawer: const AppDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Theme',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            Text('theme'.tr,
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             Obx(() => SwitchListTile(
-                  title: Text(ctrl.isDark.value ? 'Dark' : 'Light'),
+                  title: Text(ctrl.isDark.value ? 'dark'.tr : 'light'.tr),
                   value: ctrl.isDark.value,
                   onChanged: (v) => ctrl.setTheme(v),
                 )),
             const SizedBox(height: 24),
-            const Text('Language',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            Text('language'.tr,
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             Obx(() => DropdownButton<String>(
                   value: ctrl.language.value,
-                  items: const [
-                    DropdownMenuItem(value: 'en', child: Text('English')),
-                    DropdownMenuItem(value: 'ar', child: Text('العربية')),
+                  items: [
+                    DropdownMenuItem(value: 'en', child: Text('english'.tr)),
+                    DropdownMenuItem(value: 'ar', child: Text('arabic'.tr)),
                   ],
                   onChanged: (v) {
                     if (v != null) ctrl.setLanguage(v);

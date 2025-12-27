@@ -20,20 +20,20 @@ class RegisterViewState extends State<RegisterView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Register')),
+      appBar: AppBar(title: Text('register'.tr)),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             TextField(
                 controller: _nameController,
-                decoration: const InputDecoration(labelText: 'Name')),
+                decoration: InputDecoration(labelText: 'name'.tr)),
             TextField(
                 controller: _emailController,
-                decoration: const InputDecoration(labelText: 'Email')),
+                decoration: InputDecoration(labelText: 'email'.tr)),
             TextField(
                 controller: _passwordController,
-                decoration: const InputDecoration(labelText: 'Password'),
+                decoration: InputDecoration(labelText: 'password'.tr),
                 obscureText: true),
             const SizedBox(height: 16),
             ElevatedButton(
@@ -43,7 +43,7 @@ class RegisterViewState extends State<RegisterView> {
                   final password = _passwordController.text;
 
                   if (name.isEmpty || email.isEmpty || password.isEmpty) {
-                    Get.snackbar('Error', 'Please fill all fields');
+                    Get.snackbar('error'.tr, 'please_fill_all_fields'.tr);
                     return;
                   }
 
@@ -55,13 +55,13 @@ class RegisterViewState extends State<RegisterView> {
                       role: 'User');
                   try {
                     await auth.registerUser(user);
-                    Get.snackbar('Success', 'Account created');
+                    Get.snackbar('success'.tr, 'account_created'.tr);
                     Get.offAllNamed(AppRoutes.login);
                   } catch (e) {
-                    Get.snackbar('Error', e.toString());
+                    Get.snackbar('error'.tr, e.toString());
                   }
                 },
-                child: const Text('Register')),
+                child: Text('register'.tr)),
           ],
         ),
       ),

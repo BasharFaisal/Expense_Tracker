@@ -28,6 +28,7 @@ class SettingsController extends GetxController {
     await _storage.setLanguage(langCode);
     // update GetX locale
     Get.updateLocale(Locale(langCode));
+    // Force rebuild to update all widgets
     update();
   }
 }
