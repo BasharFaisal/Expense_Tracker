@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../controllers/expense_controller.dart';
 import '../models/expense_model.dart';
 import '../services/storage_service.dart';
+import 'app_drawer.dart';
 
 class AddExpenseView extends StatefulWidget {
   const AddExpenseView({Key? key}) : super(key: key);
@@ -26,6 +27,7 @@ class AddExpenseViewState extends State<AddExpenseView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Add Expense')),
+      drawer: const AppDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
